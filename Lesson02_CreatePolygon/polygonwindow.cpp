@@ -1,7 +1,9 @@
 #include "polygonwindow.h"
 
+#include <iostream>
+
 PolygonWindow::PolygonWindow(QWindow *parent) :
-    OpenGLWindow(parent), m_program(NULL)
+    OpenGLWindow(parent), m_program(NULL), switch_(false)
 {
 }
 
@@ -27,6 +29,7 @@ void PolygonWindow::initialize()
 
 void PolygonWindow::render()
 {
+    std::cout << "Render()\n";
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_program->bind();
     m_modelView.setToIdentity();
@@ -37,13 +40,23 @@ void PolygonWindow::render()
     m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
+    if (!switch_)
+    {
+        renderSquare();
+    }
+    switch_ = !switch_;
+    m_program->release();
+}
+
+void PolygonWindow::renderSquare()
+{
+    std::cout << "Render square\n";
     m_modelView.translate(3.0f, 0.0f, 0.0f);
     m_program->setUniformValue("mvpMatrix", m_projection * m_modelView);
     glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[1]);
     m_program->enableAttributeArray(m_posAttr);
     m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    m_program->release();
 }
 
 void PolygonWindow::initGeometry()

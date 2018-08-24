@@ -1,11 +1,14 @@
 #include "openglwindow.h"
 
+#include <iostream>
+
 OpenGLWindow::OpenGLWindow(QWindow *parent) :
     QWindow(parent),
     m_update_pending(false),
     m_animating(false),
     m_context(NULL),
-    m_show_full_screen(false)
+    m_show_full_screen(false),
+    m_switch_color(0)
 {
     setSurfaceType(QWindow::OpenGLSurface);
     resize(640, 480);
@@ -18,12 +21,26 @@ OpenGLWindow::~OpenGLWindow()
 
 void OpenGLWindow::render()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_switch_color = (m_switch_color + 1) % 3;
 
+    if (m_switch_color == 0)
+    {
+        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+    }
+    else
+    {
+        glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+    }
+    std::cout << "Render() \n";
 }
 
 void OpenGLWindow::initialize()
 {
-
+    glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+    glClearDepthf(1.0f);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void OpenGLWindow::resizeGL(int w, int h)
@@ -85,9 +102,9 @@ void OpenGLWindow::renderNow()
     render();
 
     m_context->swapBuffers(this);
-
     if (m_animating)
         renderLater();
+    std::cout << "RenderNow()\n";
 }
 
 bool OpenGLWindow::event(QEvent *event)
@@ -95,8 +112,6 @@ bool OpenGLWindow::event(QEvent *event)
     switch (event->type())
     {
         case QEvent::UpdateRequest:
-            m_update_pending = false;
-            renderNow();
             return true;
         default:
             return QWindow::event(event);
@@ -107,6 +122,7 @@ void OpenGLWindow::exposeEvent(QExposeEvent *event)
 {
     if (isExposed())
     {
+        std::cout << "Exposed event()\n";
         renderNow();
     }
     QWindow::exposeEvent(event);
@@ -117,6 +133,7 @@ void OpenGLWindow::resizeEvent(QResizeEvent *event)
     int w = event->size().width();
     int h = event->size().height();
     const qreal retinaScale = devicePixelRatio();
+    std::cout << "Resize event\n";
     resizeGL(w*retinaScale, h*retinaScale);
     renderNow();
     QWindow::resizeEvent(event);

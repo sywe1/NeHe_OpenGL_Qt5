@@ -13,10 +13,12 @@ public:
 protected:
     void initialize();
     void render();
+    void renderSquare();
 private:
     void initGeometry();
 private:
     QOpenGLShaderProgram *m_program;
+    bool switch_;
     GLuint m_posAttr;
 
     GLuint m_vboIds[2];

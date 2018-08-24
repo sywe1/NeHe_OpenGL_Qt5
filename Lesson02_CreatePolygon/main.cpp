@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 
     PolygonWindow window;
     window.setFormat(format);
+    window.resize(640, 480);
     window.show();
     window.setAnimating(false);
     return app.exec();

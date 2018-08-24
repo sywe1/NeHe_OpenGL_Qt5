@@ -44,6 +44,7 @@ private:
     bool m_animating;
     QOpenGLContext *m_context;
     bool m_show_full_screen;
+    std::size_t m_switch_color;
 };
 
 #endif // OPENGLWINDOW_H

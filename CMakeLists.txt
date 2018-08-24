@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.10.0)
+
+project(nehe_opengl_qt5)
+
+find_package(Qt5 COMPONENTS Gui Widgets REQUIRED)
+
+add_subdirectory(Lesson01_CreateWindow)
+add_subdirectory(Lesson02_CreatePolygon)
+add_subdirectory(Lesson03_SmoothColors)
+add_subdirectory(Lesson04_Rotating)
+add_subdirectory(Lesson05_SolidObjects)
+add_subdirectory(Lesson06_TextureMapping)
+add_subdirectory(Lesson07_BasicLighting)
+add_subdirectory(Lesson08_Blending)
+add_subdirectory(Lesson09_MovingScenes)
+add_subdirectory(Lesson10_LoadingWorld)
+add_subdirectory(Lesson11_WavingTextureMap)
+add_subdirectory(Lesson12_DisplayLists)
+add_subdirectory(Lesson13_BitmapFonts)
